@@ -1,0 +1,9 @@
+langchain
+langchain-openai
+langchain-ollama
+langchain-core
+langgraph
+langchain-mcp-adapters
+pydantic
+python-dotenv
+e2b-code-interpreter
