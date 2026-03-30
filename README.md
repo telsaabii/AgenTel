@@ -19,7 +19,7 @@ The supervisor uses structured output (Pydantic `RouteDecision`) to decide which
 
 - **Orchestration:** LangGraph (StateGraph with supervisor routing)
 - **Tool Integration:** Model Context Protocol (MCP) servers
-- **LLM:** Provider-agnostic via `build_llm()` — OpenAI gpt-4o default, Ollama local fallback
+- **LLM:** Provider-agnostic via `build_llm()` — OpenAI gpt-4o default for testing, will integrate open source models with ollama once the project is complete for more privacy
 - **Backend API:** FastAPI + WebSocket streaming
 - **Frontend:** Next.js (planned)
 - **Database:** SQLite (knowledge graph persistence)
