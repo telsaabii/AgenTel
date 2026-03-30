@@ -25,35 +25,14 @@ The supervisor uses structured output (Pydantic `RouteDecision`) to decide which
 - **Database:** SQLite (knowledge graph persistence)
 - **Code Execution:** E2B sandboxed environments
 
-### Project Structure
-
-```
-backend/
-├── agents/           # One module per agent
-│   ├── websearch.py      # Brave Search + Playwright MCP
-│   ├── filesystem.py     # Filesystem MCP (path-allowlisted)
-│   └── code_executor.py  # E2B sandboxed execution
-├── core/             # Orchestration layer
-│   ├── graph.py          # LangGraph topology + conditional routing
-│   ├── supervisor.py     # Supervisor agent + RouteDecision schema
-│   ├── state.py          # AgentState TypedDict
-│   └── llm.py            # Provider-agnostic LLM factory
-├── memory/           # Three-tier memory system (planned)
-├── security/
-│   └── guards.py         # Turn limits, token budget, path allowlist
-├── api/              # FastAPI layer (planned)
-├── prompts.py
-└── main.py
-```
-
 ## Agents
 
 | Agent | Tools | Status |
 |---|---|---|
-| **websearch** | Brave Search MCP, Playwright MCP | Implemented |
-| **filesystem** | Filesystem MCP (path-allowlisted) | Planned |
-| **code_executor** | E2B sandboxed execution | Planned |
-| **rag** | Vector embeddings, document retrieval | Planned |
+| **websearch** | Brave Search MCP, Playwright MCP 
+| **filesystem** | Filesystem MCP (path-allowlisted) |
+| **code_executor** | E2B sandboxed execution 
+| **rag** | Vector embeddings, document retrieval 
 
 Each agent is isolated — it can only access its own assigned MCP tools.
 
