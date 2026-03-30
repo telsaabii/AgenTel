@@ -41,6 +41,8 @@ async def main():
             "next": "",
             "metadata": {"session_id": "abc123"},
             "turn_count": 0,
+            "summary": {},
+            "scratchpad": {},
         }
 
         # Invoke graph — may return early due to interrupt()

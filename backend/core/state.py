@@ -26,3 +26,5 @@ class AgentState(TypedDict):
     next : str
     metadata : dict[str,Any]
     turn_count : int
+    summary : dict[str,Any]
+    scratchpad : dict[str,dict[str,Any]]

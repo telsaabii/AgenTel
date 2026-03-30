@@ -7,3 +7,6 @@ langchain-mcp-adapters
 pydantic
 python-dotenv
 e2b-code-interpreter
+tiktoken
+fastapi
+uvicorn

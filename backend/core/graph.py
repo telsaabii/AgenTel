@@ -5,6 +5,7 @@ from backend.core.supervisor import supervisor_node
 from backend.agents.websearch import websearch_node
 from backend.agents.filesystem import filesystem_node
 from backend.agents.code_executor import code_executor_node
+from backend.memory.thread import context_manager_node
 
 def route_next(state: AgentState) -> str:
     """
@@ -22,6 +23,7 @@ def build_graph() -> StateGraph:
     builder.add_node("websearch", websearch_node)
     builder.add_node("filesystem", filesystem_node)
     builder.add_node("code_executor", code_executor_node)
+    builder.add_node("context_manager", context_manager_node)
     builder.set_entry_point("supervisor")
 
     builder.add_conditional_edges(
@@ -37,9 +39,10 @@ def build_graph() -> StateGraph:
         },
     )
 
-    builder.add_edge("websearch", "supervisor")
-    builder.add_edge("filesystem", "supervisor")
-    builder.add_edge("code_executor", "supervisor")
+    builder.add_edge("websearch", "context_manager")
+    builder.add_edge("filesystem", "context_manager")
+    builder.add_edge("code_executor", "context_manager")
+    builder.add_edge("context_manager", "supervisor")
 
     return builder.compile(checkpointer=InMemorySaver())
 

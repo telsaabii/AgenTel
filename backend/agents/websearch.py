@@ -4,6 +4,7 @@ from langchain_core.runnables import RunnableConfig
 from backend.core.state import AgentState
 from backend.core.llm import build_llm
 from backend.prompts import websearch_prompt
+from backend.memory.thread import build_messages_with_summary
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -45,11 +46,12 @@ async def websearch_node(state: AgentState,config: RunnableConfig) -> dict:
             system_prompt=system_prompt,
         )
 
-        # Pass the full conversation so the agent has all context
-    agent_result = await agent.ainvoke({"messages": state["messages"]})
+    # Pass summary-aware messages so the agent has compressed context
+    messages_for_agent = build_messages_with_summary(state)
+    agent_result = await agent.ainvoke({"messages": messages_for_agent})
 
     # Slice off only the messages the agent produced in this turn
-    new_messages = agent_result["messages"][len(state["messages"]):]
+    new_messages = agent_result["messages"][len(messages_for_agent):]
 
     print(f"[websearch] produced {len(new_messages)} new message(s)")
 

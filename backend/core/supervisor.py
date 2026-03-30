@@ -1,10 +1,13 @@
 from backend.core.state import AgentState
 from backend.security.guards import check_turn_limit
+from backend.memory.thread import build_messages_with_summary
+from backend.memory.shared import scratchpad_read_all
 from typing import Literal
 from pydantic import BaseModel, Field
 from langchain_core.messages import SystemMessage
 from backend.core.llm import build_llm
 from backend.prompts import supervisor_prompt
+import json
 
 AGENTS = Literal[
     "websearch",
@@ -69,7 +72,17 @@ async def supervisor_node(state: AgentState) -> dict:
             "messages": [SystemMessage(content=f"Turn limit reached ({new_turn_count}). Finishing.")],
         }
 
-    decision: RouteDecision = await supervisor_chain.ainvoke({"messages": state["messages"]})
+    messages = build_messages_with_summary(state)
+
+    # Inject scratchpad context so supervisor can see inter-agent data
+    scratchpad = scratchpad_read_all(state)
+    if scratchpad:
+        scratchpad_msg = SystemMessage(
+            content=f"## Agent Scratchpad (structured data from agents)\n```json\n{json.dumps(scratchpad, indent=2)}\n```"
+        )
+        messages = [messages[0], scratchpad_msg] + messages[1:] if messages else [scratchpad_msg]
+
+    decision: RouteDecision = await supervisor_chain.ainvoke({"messages": messages})
 
     print(f"[supervisor] → {decision.next}  ({decision.reasoning})")
 

@@ -19,6 +19,13 @@ def build_llm(provider: str = "openai"):
             api_key = os.environ["OPENAI_API_KEY"],
         )
 
+    elif provider == "openai-mini":
+        return ChatOpenAI(
+            model="gpt-4o-mini",
+            temperature=0,
+            api_key=os.environ["OPENAI_API_KEY"],
+        )
+
     elif provider == "ollama":
         return ChatOllama(
             model = "qwen2:7b",

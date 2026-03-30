@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from backend.core.state import AgentState
 from backend.core.llm import build_llm
 from backend.prompts import filesystem_prompt
+from backend.memory.thread import build_messages_with_summary
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -175,9 +176,10 @@ async def filesystem_node(state: AgentState, config: RunnableConfig) -> dict:
         system_prompt=system_prompt,
     )
 
-    agent_result = await agent.ainvoke({"messages": state["messages"]})
+    messages_for_agent = build_messages_with_summary(state)
+    agent_result = await agent.ainvoke({"messages": messages_for_agent})
 
-    new_messages = agent_result["messages"][len(state["messages"]):]
+    new_messages = agent_result["messages"][len(messages_for_agent):]
     print(f"[filesystem] produced {len(new_messages)} new message(s)")
 
     return {"messages": new_messages}
